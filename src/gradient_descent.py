@@ -179,37 +179,6 @@ if __name__ == "__main__":
     print("\nPlot saved as 'mse_vs_iteration_multiple_lr.png'")
     plt.show()
 
-    # Analyze learning rates
-    print("\n" + "=" * 60)
-    print("Learning Rate Analysis")
-    print("=" * 60)
-
-    for lr in learning_rates:
-        loss_hist = results[lr]["loss_history"]
-        final_loss = loss_hist[-1]
-
-        # Find convergence point (when loss stops decreasing significantly)
-        convergence_iteration = len(loss_hist)
-        for i in range(100, len(loss_hist)):
-            if abs(loss_hist[i] - loss_hist[i - 1]) < 0.001:
-                convergence_iteration = i
-                break
-
-        # Check for oscillations
-        has_oscillation = any(
-            loss_hist[i] < loss_hist[i - 1] and loss_hist[i + 1] > loss_hist[i]
-            for i in range(1, len(loss_hist) - 1)
-        )
-
-        print(f"\nLR = {lr}:")
-        print(f"  Final loss:          {final_loss:.4f}")
-        print(f"  Convergence iter:    {convergence_iteration}")
-        print(f"  Has oscillations:    {has_oscillation}")
-
-    # Find best learning rate
-    best_lr = min(learning_rates, key=lambda lr: results[lr]["loss_history"][-1])
-    print(f"\n>>> Best learning rate (lowest final loss): {best_lr}")
-
     # Summary
     print("\n--- Summary of Learning Rates ---")
     for lr in learning_rates:
@@ -219,3 +188,7 @@ if __name__ == "__main__":
 # We can see from the results that the smaller learning rates
 #converge slower, while the larger learning rates converge faster.
 #this can be seen by the linear decrease in the MSE for LR = 0.001
+# The learning rate of 0.1 seems to provide a non oscillating and quick convergance, 
+#which makes it an excellant choice for this problem.
+#Too large of a learning rate is a poor choice because it will respond quickly, 
+#however it may overshoot the optimal parameters and diverge, or may cause oscillation.
